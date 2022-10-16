@@ -54,3 +54,6 @@ plugins:
 
 scholar:
   style: ieee
+
+include:
+  - "img"

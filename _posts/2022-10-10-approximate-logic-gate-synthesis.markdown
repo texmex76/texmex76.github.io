@@ -19,7 +19,7 @@ Another approach is to turn the ML model into a circuit, i.e., what used to be s
 
 First of all, I should say that there are two ways how to approach this: take an existing ML model and convert it to a circuit or have an ML algorithm that directly outputs a circuit. The ladder seems convenient, but it very hard to learn a circuit directly, i.e., the resulting models will have very low predictive power. So we will look at the fomer method.
 
-Decision trees are a good candidate to be converted into a circiut. We just have to turn turn each node into a comparator circuit and quantize the output. Other accumulators, comparators and decoders can be hand-programmed. At the IWLS 2021 contest, XGBoost converted to circuit won.
+Decision trees are a good candidate to be converted into a circiut. We just have to turn turn each node into a comparator circuit and quantize the output. Other accumulators, comparators and decoders can be hand-programmed. At the [IWLS 2021 contest](https://www.iwls.org/contest/2021/IWLS21_Contest_Slides.pdf), XGBoost converted to circuit won.
 
 One problem is, though, that going directly to circuit structure might not be a good idea. Usually, we want to have multiple steps in between, so that we can optimize (in terms of accuracy and node count) at each conversion step and at each intermediate level.
 
@@ -35,6 +35,23 @@ graph LR
 </div>
 
 Neural networks are a promising method for various reasons. For one, there is already significant research about how to make neural networks tiny, e.g., this paper shows a NN with AlexNet-like performance running on a device with just 320kB of memory {% cite bib:lin2020mcunet %}. We can thus just take tinyML results and start from there.
+
+One paper does exactly this; they take a quantized neural network and condense it by detecting sub-adder sharing {% cite bib:huang2022quantized %}. For example, if $X = A + B + C +D$ and $Y = B + C + D + E$, then you can share $B + C + D$. They then translate the network to Verilog format and compile the cirucit using Vivado, which is a software used for working with FPGAs.
+
+Since we are are not looking for FPGA deployment here, we would actually convert the Verilog to an and-inverter graph (AIG) {% cite bib:Biere %}. An example of this format is illustrated below. Nodes depict the AND operation and the black dots are negation. This illustration is the same as $\lnot 6 \wedge (2 \wedge 4)$.
+
+{:refdef: style="text-align: center;"}
+![aig](/assets/img/aig.svg){: width="200"}
+{:refdef}
+
+Finding good intermediate representations is crucial, and lookup-table nets (LUT nets) are a good candidate. The image below illustrates how they basically work. You can also read about them in my [Master Thesis](https://epub.jku.at/obvulihs/download/pdf/7851313?originalFilename=true).
+
+
+{:refdef: style="text-align: center;"}
+![aig](/assets/img/lut_net.png){: width="450"}
+{:refdef}
+
+A paper working with LUT networks is this one {% cite bib:wang2020lutnet %}. They start with an Xnor-net {% cite bib:rastegari2016xnor %} and find an efficient mapping to a LUT network, which is the main contribution of their paper. Same as before, they then produce a Verilog file which they pass to Vivado.
 
 
 # References
