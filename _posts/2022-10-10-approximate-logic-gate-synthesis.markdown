@@ -53,6 +53,24 @@ Finding good intermediate representations is crucial, and lookup-table nets (LUT
 
 A paper working with LUT networks is this one {% cite bib:wang2020lutnet %}. They start with an Xnor-net {% cite bib:rastegari2016xnor %} and find an efficient mapping to a LUT network, which is the main contribution of their paper. Same as before, they then produce a Verilog file which they pass to Vivado.
 
+Once we are at LUT network level, we could try some learning algorithm to try to recover accuracy, in case we lost some. For example, the Muesli algorithm {% cite bib:oliveira1993learning %} seems suitable. This algorithm performs gradient descent on the mutual information between a set of nodes and the labels. The Muesli algorithm has been around since 1993 and recently has been gaining traction, as visible in the figure below.
+
+{:refdef: style="text-align: center;"}
+![muesli](/assets/img/muesli_citations.svg){: width="400"}
+{:refdef}
+
+# Challenges
+
+As of the time of writing this post, approximate logic gate synthesis is a rather obscure research topic, so there is a lack of papers.
+
+Furthermore, the results of different papers are hard to compare because the output format is not standardized:* If one paper says "We obtain an AIG with a number of $X$ nodes." and another paper "Vivado tells us following about the cirucit performance...", then there is no direct comparison. The paper {% cite bib:huang2022quantized %} acknowledges this and they go to great lengths to try to compare their results to others'.
+
+It would also be useful to establish "leages" of node count or some other measure of complexity for comparison. For example, in the IWLS 2021 challenge they had three leagues: A maximum of 10,000, 100,000 and 1,000,000 AIG nodes.
+
+# Further Reading
+
+If you would like to get into approximate logic gate synthesis, the IWLS 2020 paper {% cite bib:rai2021logic %} is a good start. In [this post]({% post_url 2022-10-17-iwls-challenges-overview %}), I give various links concerning the IWLS challenges.
+
 
 # References
 
