@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/main.css">
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Bernhard Gstrein">
+<!--custom css-->
+  
+    
+    <link rel="stylesheet" href="/assets/css/citation.css">
+    
+  
+<script>MathJax={"tex":{"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"svg":{"fontCache":"global"}}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site-header" role="banner">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/">Bernhard Gstrein</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/publications/">Publications</a></div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Approximate Logic Gate Synthesis</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2022-10-10T12:23:40+00:00" itemprop="datePublished">Oct 10, 2022
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="introduction">Introduction</h1>
+
+<p>Deep learning has made our lives greater in many regards. For the most part, machine learning models are deployed on the cloud. With no internet connection, however, we are out of luck. The natural solution is to make the machine learning models smaller, such that they can be deployed locally. This is fine for modern mobile phones, but what about devices with very little computing power, e.g., smart wearables and smart sensors. Here we must make the model even smaller.</p>
+
+<p>Once we have made the model smaller, we can put the model on a FPGA. This might work in many fields, but FPGAs are rather expensive and have relatively high power consumption. If, for examle, we wanted to locally enhance the audio of a hearning aid via a ML-based solution, the hearning aid might run out of battery too soon.</p>
+
+<p>Another approach is to turn the ML model into a circuit, i.e., what used to be software is now hardware. This way we can have ML on a tiny cost-efficient electronic device with good battery life. Thus, in this blog post, we will look at serveral schemes how to come up with a circuit that represents a ML model.</p>
+
+<h1 id="approach">Approach</h1>
+
+<p>First of all, I should say that there are two ways how to approach this: take an existing ML model and convert it to a circuit or have an ML algorithm that directly outputs a circuit. The ladder seems convenient, but it very hard to learn a circuit directly, i.e., the resulting models will have very low predictive power. So we will look at the fomer method.</p>
+
+<p>Decision trees are a good candidate to be converted into a circiut. We just have to turn turn each node into a comparator circuit and quantize the output. Other accumulators, comparators and decoders can be hand-programmed. At the <a href="https://www.iwls.org/contest/2021/IWLS21_Contest_Slides.pdf">IWLS 2021 contest</a>, XGBoost converted to circuit won.</p>
+
+<p>One problem is, though, that going directly to circuit structure might not be a good idea. Usually, we want to have multiple steps in between, so that we can optimize (in terms of accuracy and node count) at each conversion step and at each intermediate level.</p>
+
+<div style="text-align: center">
+<img class="mermaid" src="https://mermaid.ink/svg/eyJjb2RlIjoiZ3JhcGggTFJcbkEoTUwgTW9kZWxsKSAtLT4gQihJbnRlcm1lZGlhdGU8YnI-UmVwcmVzZW50YXRpb24pXG5CIC0tPiB8b3B0aW1pemV8IEJcbkIgLS0-IEMoSW50ZXJtZWRpYXRlPGJyPlJlcHJlc2VudGF0aW9uKVxuQyAtLT4gfG9wdGltaXplfCBDXG5DIC0tPiBEKENpcmN1aXQpIiwibWVybWFpZCI6bnVsbH0">
+</div>
+
+<p>Neural networks are a promising method for various reasons. For one, there is already significant research about how to make neural networks tiny, e.g., this paper shows a NN with AlexNet-like performance running on a device with just 320kB of memory <a class="citation" href="#bib:lin2020mcunet">[1]</a>. We can thus just take tinyML results and start from there.</p>
+
+<p>One paper does exactly this; they take a quantized neural network and condense it by detecting sub-adder sharing <a class="citation" href="#bib:huang2022quantized">[2]</a>. For example, if $X = A + B + C +D$ and $Y = B + C + D + E$, then you can share $B + C + D$. They then translate the network to Verilog format and compile the cirucit using Vivado, which is a software used for working with FPGAs.</p>
+
+<p>Since we are are not looking for FPGA deployment here, we would actually convert the Verilog to an and-inverter graph (AIG) <a class="citation" href="#bib:Biere">[3]</a>. An example of this format is illustrated below. Nodes depict the AND operation and the black dots are negation. This illustration is the same as $\lnot 6 \wedge (2 \wedge 4)$.</p>
+
+<p style="text-align: center;"><img src="/assets/img/aig.svg" alt="aig" width="200"></p>
+
+<p>Finding good intermediate representations is crucial, and lookup-table nets (LUT nets) are a good candidate. The image below illustrates how they basically work. You can also read about them in my <a href="https://epub.jku.at/obvulihs/download/pdf/7851313?originalFilename=true">Master Thesis</a>.</p>
+
+<p style="text-align: center;"><img src="/assets/img/lut_net.png" alt="aig" width="450"></p>
+
+<p>A paper working with LUT networks is this one <a class="citation" href="#bib:wang2020lutnet">[4]</a>. They start with an Xnor-net <a class="citation" href="#bib:rastegari2016xnor">[5]</a> and find an efficient mapping to a LUT network, which is the main contribution of their paper. Same as before, they then produce a Verilog file which they pass to Vivado.</p>
+
+<p>Once we are at LUT network level, we could try some learning algorithm to try to recover accuracy, in case we lost some. For example, the Muesli algorithm <a class="citation" href="#bib:oliveira1993learning">[6]</a> seems suitable. This algorithm performs gradient descent on the mutual information between a set of nodes and the labels. The Muesli algorithm has been around since 1993 and recently has been gaining traction, as visible in the figure below.</p>
+
+<p style="text-align: center;"><img src="/assets/img/muesli_citations.svg" alt="muesli" width="400"></p>
+
+<h1 id="challenges">Challenges</h1>
+
+<p>As of the time of writing this post, approximate logic gate synthesis is a rather obscure research topic, so there is a lack of papers.</p>
+
+<p>Furthermore, the results of different papers are hard to compare because the output format is not standardized:* If one paper says “We obtain an AIG with a number of $X$ nodes.” and another paper “Vivado tells us following about the cirucit performance…”, then there is no direct comparison. The paper <a class="citation" href="#bib:huang2022quantized">[2]</a> acknowledges this and they go to great lengths to try to compare their results to others’.</p>
+
+<p>It would also be useful to establish “leages” of node count or some other measure of complexity for comparison. For example, in the IWLS 2021 challenge they had three leagues: A maximum of 10,000, 100,000 and 1,000,000 AIG nodes.</p>
+
+<h1 id="further-reading">Further Reading</h1>
+
+<p>If you would like to get into approximate logic gate synthesis, the IWLS 2020 paper <a class="citation" href="#bib:rai2021logic">[7]</a> is a good start. In <a href="/logic/synthesis/2022/10/17/iwls-challenges-overview.html">this post</a>, I give various links concerning the IWLS challenges.</p>
+
+<h1 id="references">References</h1>
+
+<ol class="bibliography">
+<li><span id="bib:lin2020mcunet">[1]J. Lin, W.-M. Chen, J. Cohn, C. Gan, and S. Han, “MCUNet: Tiny Deep Learning on IoT Devices,” 2020.</span></li>
+<li><span id="bib:huang2022quantized">[2]Y.-S. Huang, J.-H. R. Jiang, and A. Mishchenko, “Quantized Neural Network Synthesis for Direct Logic Circuit Implementation,” <i>IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems</i>, 2022.</span></li>
+<li><span id="bib:Biere">[3]A. Biere, “The AIGER And-Inverter Graph (AIG) Format Version 20071012,” Institute for Formal Models and Verification,
+    Johannes Kepler University, Altenbergerstr. 69, 4040 Linz, Austria, 07/1, 2007.</span></li>
+<li><span id="bib:wang2020lutnet">[4]E. Wang, J. J. Davis, P. Y. K. Cheung, and G. A. Constantinides, “LUTNet: Learning FPGA configurations for highly efficient neural network inference,” <i>IEEE Transactions on Computers</i>, vol. 69, no. 12, pp. 1795–1808, 2020.</span></li>
+<li><span id="bib:rastegari2016xnor">[5]M. Rastegari, V. Ordonez, J. Redmon, and A. Farhadi, “Xnor-net: Imagenet classification using binary convolutional neural networks,” in <i>European conference on computer vision</i>, 2016, pp. 525–542.</span></li>
+<li><span id="bib:oliveira1993learning">[6]A. Oliveira and A. Sangiovanni-Vincentelli, “Learning complex boolean functions: Algorithms and applications,” <i>Advances in Neural Information Processing Systems</i>, vol. 6, 1993.</span></li>
+<li><span id="bib:rai2021logic">[7]S. Rai <i>et al.</i>, “Logic synthesis meets machine learning: Trading exactness for generalization,” in <i>2021 Design, Automation &amp; Test in Europe Conference &amp; Exhibition (DATE)</i>, 2021, pp. 1026–1031.</span></li>
+</ol>
+
+<script type="text/javascript">
+let listy = document.getElementsByClassName("bibliography")[0];
+for (let i = 0; i < listy.children.length; i ++) {
+  tmp = listy.children[i].innerText.replace(/^\[\d+\]/, "");
+  listy.children[i].innerText = tmp;
+}
+</script>
+
+
+  </div>
+
+  <a class="u-url" href="/logic/synthesis/2022/10/10/approximate-logic-gate-synthesis.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Bernhard Gstrein</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Bernhard Gstrein</li>
+<li><a class="u-email" href="mailto:bernhard-gstrein@mailbox.org">bernhard-gstrein@mailbox.org</a></li>
+</ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+<ul class="social-media-list">
+<li><a href="https://github.com/texmex76"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">texmex76</span></a></li>
+<li><a href="https://www.twitter.com/ac_ber"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">ac_ber</span></a></li>
+</ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>I am a PhD student at the University of Freiburg. I do research in the intersection of SAT solving, hardware synthesis, and machine learning. In particular, circuit learning is one of my main areas.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
