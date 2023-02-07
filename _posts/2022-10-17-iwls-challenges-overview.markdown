@@ -29,7 +29,7 @@ They only made [slides](https://www.iwls.org/contest/2021/IWLS21_Contest_Slides.
 
 The [winning team](https://www.youtube.com/watch?v=ZX48kUy_KPU) used XGBoost which they converted into circuit, the [2nd team](https://youtu.be/hN9aFaw7wCc) started out with a CNN and the [3rd team](https://youtu.be/mVI0AMYjP6Y) used random forests for 10,000 and 100,000 nodes and a CNN for 1,000,000 nodes.
 
-The graphic below is taken from the [contest website]()
+The graphic below is taken from the [contest website](https://www.iwls.org/contest/)
 
 {:refdef: style="text-align: center;"}
 ![iwls 2021 contest results](https://www.iwls.org/contest/2021/2021_gallery.png){: width="800"}
