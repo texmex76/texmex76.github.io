@@ -1,7 +1,6 @@
 +++
 title = "My first post"
 date = 2019-11-27
-summary = "hello"
 +++
 
 This is my first blog post. Hello there.
