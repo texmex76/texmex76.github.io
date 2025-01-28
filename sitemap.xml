@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://www.ber.ac/</loc>
+    </url>
+    <url>
+        <loc>https://www.ber.ac/2024/</loc>
+    </url>
+    <url>
+        <loc>https://www.ber.ac/2024/first/</loc>
+        <lastmod>2024-11-27</lastmod>
+    </url>
+    <url>
+        <loc>https://www.ber.ac/2024/second/</loc>
+        <lastmod>2024-01-27</lastmod>
+    </url>
+    <url>
+        <loc>https://www.ber.ac/2025/</loc>
+    </url>
+    <url>
+        <loc>https://www.ber.ac/2025/first/</loc>
+        <lastmod>2025-11-27</lastmod>
+    </url>
+    <url>
+        <loc>https://www.ber.ac/2025/second/</loc>
+        <lastmod>2025-01-27</lastmod>
+    </url>
+    <url>
+        <loc>https://www.ber.ac/about/</loc>
+        <lastmod>2020-01-01</lastmod>
+    </url>
+    <url>
+        <loc>https://www.ber.ac/contact/</loc>
+        <lastmod>2020-01-02</lastmod>
+    </url>
+</urlset>
