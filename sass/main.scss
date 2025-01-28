@@ -1,0 +1,89 @@
+// Define colors
+$background-color: #f0f0f0;
+$content-background: #ffffff;
+$text-color: #333333;
+
+// Global styles
+body {
+  background-color: $background-color;
+  color: $text-color;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column; // Stack everything vertically
+  align-items: center; // Center everything horizontally
+}
+
+// Ensure all elements stack vertically
+.container {
+  display: flex;
+  flex-direction: column; // Stack child elements vertically
+  align-items: center; // Center them horizontally
+  gap: 20px; // Add space between elements
+  max-width: 800px;
+  width: 100%;
+}
+
+// Header (Site Title)
+.site-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #0077cc;
+}
+
+// Navigation bar
+.site-nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.site-nav a {
+  text-decoration: none;
+  color: #0077cc;
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #0077cc;
+    color: #ffffff;
+  }
+}
+
+// Blog posts section
+.posts {
+  display: flex;
+  flex-direction: column; // Stack posts on top of each other
+  gap: 20px;
+  width: 100%;
+}
+
+.post {
+  background-color: $content-background;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+.post h2 {
+  margin-top: 0;
+}
+
+// Pagination
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.pagination a {
+  color: #0077cc;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

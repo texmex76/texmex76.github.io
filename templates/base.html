@@ -4,9 +4,11 @@
 <head>
   <meta charset="utf-8">
   <title>{{ config.title }}</title>
+  <link rel="stylesheet" href="{{ get_url(path='main.css') }}">
 </head>
 
 <body>
+<div class="container">
 <h1 class="site-title">Bernhard's Blog</h1>
 
 <nav class="site-nav">
@@ -20,6 +22,7 @@
       {% block content %} {% endblock %}
     </div>
   </section>
+  </div>
 </body>
 
 </html>
