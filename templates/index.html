@@ -2,6 +2,24 @@
 
 {% block content %}
 
-<p>he</p>
+<div class="posts">
+    {% set recent_posts = [] %}
+    {% for year in section.subsections %}
+        {% set year_section = get_section(path=year) %}
+        {% for page in year_section.pages %}
+            {% if recent_posts | length < 10 %}
+                {% set_global recent_posts = recent_posts | concat(with=page) %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+    {% for page in recent_posts %}
+    <div class="post">
+        <h2><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>
+        <p class="subtitle"><strong>{{ page.date }}</strong></p>
+        {{ page.content | safe }}
+    </div>
+    {% endfor %}
+</div>
 
 {% endblock content %}
