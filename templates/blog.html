@@ -1,15 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  {{ section.title }}
-</h1>
-
-<nav class="site-nav">
-<a href="{{ get_url(path='@/blog/_index.md') }}">Home</a>
-<a href="{{ get_url(path='about') }}">About</a>
-<a href="{{ get_url(path='contact') }}">Contact</a>
-</nav>
 
 <div class="posts">
     {% for page in paginator.pages %}
